@@ -136,6 +136,7 @@ func New(config *Config) (*State, error) {
 func (s *State) Run() error {
 	data := &templateData{
 		Tables:            s.Tables,
+		Custom:            s.Config.Custom,
 		Aliases:           s.Config.Aliases,
 		DriverName:        s.Config.DriverName,
 		PkgName:           s.Config.PkgName,

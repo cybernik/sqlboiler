@@ -187,6 +187,7 @@ func preRun(cmd *cobra.Command, args []string) error {
 		TemplateDirs:      viper.GetStringSlice("templates"),
 		Tags:              viper.GetStringSlice("tag"),
 		Replacements:      viper.GetStringSlice("replace"),
+		Custom:            boilingcore.ConvertCustom(viper.Get("custom")),
 		Aliases:           boilingcore.ConvertAliases(viper.Get("aliases")),
 		TypeReplaces:      boilingcore.ConvertTypeReplace(viper.Get("types")),
 		Version:           sqlBoilerVersion,

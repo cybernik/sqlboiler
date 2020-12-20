@@ -22,6 +22,7 @@ type templateData struct {
 	Tables  []drivers.Table
 	Table   drivers.Table
 	Aliases Aliases
+	Custom  Custom
 
 	// Controls what names are output
 	PkgName string

@@ -37,6 +37,8 @@ type Config struct {
 
 	Imports importers.Collection `toml:"imports,omitempty" json:"imports,omitempty"`
 
+	Custom Custom `toml:"custom,omitempty" json:"custom,omitempty"`
+
 	Aliases      Aliases       `toml:"aliases,omitempty" json:"aliases,omitempty"`
 	TypeReplaces []TypeReplace `toml:"type_replaces,omitempty" json:"type_replaces,omitempty"`
 
@@ -59,6 +61,35 @@ func (c *Config) OutputDirDepth() int {
 	}
 
 	return strings.Count(d, "/") + 1
+}
+
+func ConvertCustom(i interface{}) (c Custom) {
+	if i == nil {
+		return c
+	}
+
+	topLevel := cast.ToStringMap(i)
+
+	tablesIntf := topLevel["tables"]
+
+	iterateMapOrSlice(tablesIntf, func(tableName string, tIntf interface{}) {
+		if c.Tables == nil {
+			c.Tables = make(map[string]CustomGroup)
+		}
+
+		cg := CustomGroup{ Groups: make(map[string]CustomParameters) }
+
+		groupsIntf := cast.ToStringMap(tIntf)
+		iterateMapOrSlice(groupsIntf, func(groupName string, gIntf interface{}) {
+			var cp CustomParameters
+			cp.Params = cast.ToStringMapString(gIntf)
+			cg.Groups[groupName] = cp
+		})
+
+		c.Tables[tableName] = cg
+	})
+
+	return c
 }
 
 // ConvertAliases is necessary because viper
